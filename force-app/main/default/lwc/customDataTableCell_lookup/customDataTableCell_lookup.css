@@ -1,0 +1,9 @@
+.slds-text-link:hover{
+	cursor: var(--hover-cursor);
+}
+.edit_icon{
+	opacity: 0.4;
+}
+:hover ~ .edit_icon {
+    opacity: 1;
+}

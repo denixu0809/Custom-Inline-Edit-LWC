@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+	<types>
+		<members>CustomDataTable</members>
+		<members>CustomDataTableTest</members>
+		<members>CustomLookupLwcController</members>
+		<members>CustomLookupLwcControllerTest</members>
+		<name>ApexClass</name>
+	</types>
+	<types>
+		<members>customDataTable</members>
+		<members>customDataTableCell</members>
+		<members>customDataTableCell_checkbox</members>
+		<members>customDataTableCell_currency</members>
+		<members>customDataTableCell_date</members>
+		<members>customDataTableCell_datetime</members>
+		<members>customDataTableCell_double</members>
+		<members>customDataTableCell_integer</members>
+		<members>customDataTableCell_lookup</members>
+		<members>customDataTableCell_phone</members>
+		<members>customDataTableCell_picklist</members>
+		<members>customDataTableCell_string</members>
+		<members>customDataTableCell_textarea</members>
+		<members>customDataTableCell_url</members>
+		<members>customDataTableHeader</members>
+		<members>customDataTableRow</members>
+		<members>customLookupLwc</members>
+		<name>LightningComponentBundle</name>
+	</types>
+	<version>53.0</version>
+</Package>

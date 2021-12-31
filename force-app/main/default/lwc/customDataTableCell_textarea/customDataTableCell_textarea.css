@@ -1,0 +1,13 @@
+.textarea_output{
+    width: 250px;
+}
+:host {
+   --sds-c-textarea-sizing-height: 250px;
+}
+.edit_icon{
+	opacity: 0.4;
+}
+
+:hover ~ .edit_icon {
+    opacity: 1;
+}

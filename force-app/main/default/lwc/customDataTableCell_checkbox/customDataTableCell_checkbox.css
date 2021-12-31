@@ -1,0 +1,9 @@
+:host{
+	text-align: center;
+}
+.edit_icon{
+	opacity: 0.4;
+}
+:hover ~ .edit_icon {
+    opacity: 1;
+}

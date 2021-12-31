@@ -1,0 +1,71 @@
+<template>
+	<lightning-card>
+		<div slot="title">
+			<div>{title}</div>
+		</div>
+		<div class="slds-grid">
+			<div class="slds-col">
+				<div class="record-per-page-section slds-float_left slds-m-around_x-small ">
+					<span class="slds-m-around_xx-small">Show:</span>
+					<lightning-combobox class="record-per-page-combo-box" variant="label-hidden" value={showRecords}
+						options={showRecordsOption} onchange={showNoOfRecordHandler}>
+					</lightning-combobox><span class="slds-m-around_xx-small">of {totalRecords}</span>
+				</div>
+			</div>
+			<div class="slds-col">
+				<div class="button_section slds-m-top_x-small">
+					<template if:true={isUpdate}>
+						<lightning-button label="Cancel" onclick={onCancelHandler}></lightning-button>
+						<lightning-button label="Save" class="slds-m-left_x-small" variant="brand" onclick={onSaveHandler}>
+						</lightning-button>
+					</template>
+				</div>
+			</div>
+			<div class="slds-col">
+				<div class="page-section slds-float_right  slds-m-around_x-small">
+					<span><lightning-button-icon
+                class=""
+                icon-name="utility:chevronleft"
+                onclick={onPreviousPage}
+                disabled={isDisabledPreviousPage}
+                size="medium"
+              ></lightning-button-icon></span>
+					<span class="slds-m-around_xx-small">Page:</span>
+					<lightning-input type="number" class="page-input" value={currentPage} variant="label-hidden"
+						onchange={onPageNoChangeHandler}>
+					</lightning-input><span class="slds-m-around_xx-small">of {totalPages}</span>
+					<span><lightning-button-icon
+                class=""
+                icon-name="utility:chevronright"
+                onclick={onNextPage}
+                disabled={isDisabledNextPage}
+                size="medium"
+              ></lightning-button-icon></span>
+				</div>
+			</div>
+		</div>
+		<div class="slds-scrollable">
+			<table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+				<thead>
+					<tr class="slds-line-height_reset">
+						<th>
+						</th>
+						<template for:each={fieldsMetaData} for:item="header">
+							<template if:false={header.isHidden}>
+								<c-custom-data-table-Header key={header.fieldName} order-by={orderBy}
+									onsortcolumn={handleSortColumn} order-direction={orderDirection} header={header}>
+								</c-custom-data-table-Header>
+							</template>
+						</template>
+					</tr>
+				</thead>
+				<tbody>
+					<template for:each={data} for:item="row" for:index="index">
+						<c-custom-data-table-row key={row.Id} index={index} fields-meta-data={fieldsMetaData} row={row} selected-ids={selectedRecordIds}
+							oncellchange={handleCellChange} onrecordselect={onRecordSelectHandler}></c-custom-data-table-row>
+					</template>
+				</tbody>
+			</table>
+		</div>
+	</lightning-card>
+</template>

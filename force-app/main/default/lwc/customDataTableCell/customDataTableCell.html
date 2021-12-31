@@ -1,0 +1,57 @@
+<template>
+	<template if:true={isUnknownType}>
+		{cellValue}
+	</template>
+	<template if:false={isUnknownType}>
+		<template if:true={isString}>
+			<c-custom-data-table-cell_string index={index} cell-value={cellValue} cell-name={cellName}
+				is-read-only={isReadOnly} ondatachange={handleCellChange}></c-custom-data-table-cell_string>
+		</template>
+		<template if:true={isNumber}>
+			<c-custom-data-table-cell_integer index={index} cell-value={cellValue} cell-name={cellName}
+				is-read-only={isReadOnly} ondatachange={handleCellChange}></c-custom-data-table-cell_integer>
+		</template>
+		<template if:true={isCheckbox}>
+			<c-custom-data-table-cell_checkbox index={index} cell-value={cellValue} cell-name={cellName}
+				is-read-only={isReadOnly} ondatachange={handleCellChange}></c-custom-data-table-cell_checkbox>
+		</template>
+		<template if:true={isDouble}>
+			<c-custom-data-table-cell_double index={index} cell-value={cellValue} cell-name={cellName}
+				is-read-only={isReadOnly} ondatachange={handleCellChange}></c-custom-data-table-cell_double>
+		</template>
+		<template if:true={isCurrency}>
+			<c-custom-data-table-cell_currency index={index} cell-value={cellValue} cell-name={cellName}
+				is-read-only={isReadOnly} currency-code={currencyCode} ondatachange={handleCellChange}>
+			</c-custom-data-table-cell_currency>
+		</template>
+		<template if:true={isLookup}>
+			<c-custom-data-table-cell_lookup index={index} cell-value={cellValue} cell-value-label={cellValueLabel} cell-name={cellName}
+				object-name={objectName} is-read-only={isReadOnly} lookup-cell-name={cellValueName} ondatachange={handleCellChange}>
+			</c-custom-data-table-cell_lookup>
+		</template>
+		<template if:true={isDate}>
+			<c-custom-data-table-cell_date index={index} cell-value={cellValue} cell-name={cellName}
+				is-read-only={isReadOnly} ondatachange={handleCellChange}></c-custom-data-table-cell_date>
+		</template>
+		<template if:true={isDateTime}>
+			<c-custom-data-table-cell_datetime index={index} cell-value={cellValue} cell-name={cellName}
+				is-read-only={isReadOnly} ondatachange={handleCellChange}></c-custom-data-table-cell_datetime>
+		</template>
+		<template if:true={isURL}>
+			<c-custom-data-table-cell_url index={index} cell-value={cellValue} cell-name={cellName}
+				is-read-only={isReadOnly} ondatachange={handleCellChange}></c-custom-data-table-cell_url>
+		</template>
+		<template if:true={isPhone}>
+			<c-custom-data-table-cell_phone index={index} cell-value={cellValue} cell-name={cellName}
+				is-read-only={isReadOnly} ondatachange={handleCellChange}></c-custom-data-table-cell_phone>
+		</template>
+		<template if:true={isTextArea}>
+			<c-custom-data-table-cell_textarea index={index} cell-value={cellValue} cell-name={cellName}
+				is-read-only={isReadOnly} ondatachange={handleCellChange}></c-custom-data-table-cell_textarea>
+		</template>
+		<template if:true={isPicklist}>
+			<c-custom-data-table-cell_picklist index={index} cell-value={cellValue} cell-name={cellName} options={options}
+				is-read-only={isReadOnly} ondatachange={handleCellChange}></c-custom-data-table-cell_picklist>
+		</template>
+	</template>
+</template>

@@ -1,0 +1,18 @@
+<template>
+    <template if:true={isEditMode}>
+        <lightning-input type="date" value={cellValue} variant="label-hidden" onchange={onChangeHandler} onfocusout={handleOnFocusOut}></lightning-input>
+    </template>
+    <template if:false={isEditMode}>
+        <div class="slds-form-element slds-form-element_edit slds-hint-parent">
+			<div class="slds-form-element__control">
+				<div class="slds-form-element__static">
+					{cellValue}
+				</div>
+				<template if:false={isReadOnly}>
+					<lightning-button-icon class="slds-m-left_xx-small edit_icon" icon-name="utility:edit" variant="bare"
+						size="medium" onclick={onEditHandler}></lightning-button-icon>
+				</template>
+			</div>
+		</div>
+    </template>
+</template>

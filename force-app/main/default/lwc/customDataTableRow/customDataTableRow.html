@@ -1,0 +1,24 @@
+<template>
+	<tr key={row.Id}>
+		<td>
+			<div style="display:flex;">
+			<a href={recordLink} target="_blank">
+                <lightning-button-icon
+                    icon-name="utility:preview"
+                    variant="bare"
+                    size="medium"
+                ></lightning-button-icon>
+            </a>
+			<lightning-input type="checkbox" class="slds-m-left_small" variant="label-hidden" checked={isSelected} onchange={onRecordSelectHandler}></lightning-input>
+			</div>
+		</td>
+		<template for:each={fieldsMetaData} for:item="item">
+			<template if:false={item.isHidden}>
+				<td key={item.fieldName}>
+					<c-custom-data-table-cell index={index} row={row} row-meta-data={item}
+						ondatachange={handleCellChange}></c-custom-data-table-cell>
+				</td>
+			</template>
+		</template>
+	</tr>
+</template>

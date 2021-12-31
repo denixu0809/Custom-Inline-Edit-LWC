@@ -1,0 +1,10 @@
+:host{
+	display : flex;
+	float: right;
+}
+.edit_icon{
+	opacity: 0.4;
+}
+:hover ~ .edit_icon {
+    opacity: 1;
+}
