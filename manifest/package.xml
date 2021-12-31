@@ -25,6 +25,7 @@
 		<members>customDataTableHeader</members>
 		<members>customDataTableRow</members>
 		<members>customLookupLwc</members>
+		<members>customLookupLwc_result</members>
 		<name>LightningComponentBundle</name>
 	</types>
 	<version>53.0</version>
