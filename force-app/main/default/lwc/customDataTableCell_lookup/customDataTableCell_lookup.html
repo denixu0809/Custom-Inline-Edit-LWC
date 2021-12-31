@@ -3,7 +3,8 @@
         <c-custom-lookup-lwc icon-name="standard:account"
                          s-object-api-name={objectName}
                          default-record-id={cellValue}
-                         onlookupupdate={lookupRecord}></c-custom-lookup-lwc>
+                         onlookupupdate={lookupRecord}
+						 name-field={lookupCellName}></c-custom-lookup-lwc>
     </template>
     <template if:false={isEditMode}>
         <div class="slds-form-element slds-form-element_edit slds-hint-parent">
