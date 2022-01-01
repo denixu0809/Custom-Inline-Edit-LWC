@@ -1,22 +1,20 @@
 <template>
-    <template if:true={isEditMode}>
-        <c-custom-lookup-lwc icon-name="standard:account"
-                         s-object-api-name={objectName}
-                         default-record-id={cellValue}
-                         onlookupupdate={lookupRecord}
-						 name-field={lookupCellName}></c-custom-lookup-lwc>
-    </template>
-    <template if:false={isEditMode}>
-        <div class="slds-form-element slds-form-element_edit slds-hint-parent">
+	<template if:true={isEditMode}>
+		<c-custom-lookup-lwc icon-name={iconName} s-object-api-name={objectName} default-record-id={cellValue} onlookupupdate={lookupRecord}
+			related-to={relatedTo} queues-object-name={queuesObjectName} name-field={lookupCellName}>
+		</c-custom-lookup-lwc>
+	</template>
+	<template if:false={isEditMode}>
+		<div class="slds-form-element slds-form-element_edit slds-hint-parent">
 			<div class="slds-form-element__control">
 				<div class="slds-form-element__static slds-text-link" style={hoverCursor} onclick={redirectToRecord}>
 					{cellValueLabel}
 				</div>
 				<template if:false={isReadOnly}>
-					<lightning-button-icon class="slds-m-left_xx-small edit_icon" icon-name="utility:edit" variant="bare"
-						size="medium" onclick={onEditHandler}></lightning-button-icon>
+					<lightning-button-icon class="slds-m-left_xx-small edit_icon" icon-name="utility:edit"
+						variant="bare" size="medium" onclick={onEditHandler}></lightning-button-icon>
 				</template>
 			</div>
 		</div>
-    </template>
+	</template>
 </template>

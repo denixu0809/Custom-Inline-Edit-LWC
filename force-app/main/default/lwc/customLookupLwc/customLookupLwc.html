@@ -9,9 +9,9 @@
 				<div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_left-right" role="none">
 					<div class="searchBoxWrapper slds-show">
 						<!--Lookup Input Field-->
-						<lightning-input type="search" data-source="searchInputField" onclick={toggleResult}
-							onchange={handleKeyChange} is-loading={isSearchLoading} value={searchKey}
-							variant="label-hidden" placeholder={placeholder}></lightning-input>
+						<lightning-input type="search" class="width_max_content" data-source="searchInputField"
+							onclick={toggleResult} onchange={handleKeyChange} is-loading={isSearchLoading}
+							value={searchKey} variant="label-hidden" placeholder={placeholder}></lightning-input>
 					</div>
 
 					<!--Lookup Selected record pill container start-->
@@ -36,8 +36,9 @@
 					class="slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid" role="listbox">
 					<ul class="slds-listbox slds-listbox_vertical" role="presentation">
 						<template for:each={lstResult} for:item="obj">
-							<c-custom-lookup-lwc_result key={obj.Id} single-rec={obj} name-field={nameField} icon-name={iconName}
-              onselectrecord={onSelectRecordHandler}></c-custom-lookup-lwc_result>
+							<c-custom-lookup-lwc_result key={obj.Id} single-rec={obj} 
+								icon-name={iconName} onselectrecord={onSelectRecordHandler}>
+							</c-custom-lookup-lwc_result>
 						</template>
 						<!--ERROR msg, if there is no records..-->
 						<template if:false={hasRecords}>

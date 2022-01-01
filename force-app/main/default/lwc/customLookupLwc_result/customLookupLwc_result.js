@@ -1,14 +1,10 @@
 import { LightningElement, api } from 'lwc';
 export default class CustomLookupLwc_result extends LightningElement {
     @api singleRec;
-    @api nameField;
-    @api iconName;
+    @api iconName; 
 
     get recName(){
-        if(this.singleRec != undefined){
-            return this.singleRec[this.nameField];
-        }
-        return null;
+        return this.singleRec.Name;
     }
 
 

@@ -152,14 +152,8 @@ export default class CustomDataTable extends LightningElement {
             this.fieldsMetaData.forEach(field => {
                 if (!fields.includes(field.fieldName)) {
                     fields.push(field.fieldName);
-                    if (field.lookupNameField != undefined) {
-                        if (field.fieldName.includes('__c')) {
-                            var lookupField = field.fieldName.replace('__c', '__r') + '.' + field.lookupNameField;
-                            fields.push(lookupField);
-                        } else if (field.fieldName.endsWith('Id')) {
-                            var lookupField = field.fieldName.substring(0, field.fieldName.length - 2) + '.' + field.lookupNameField;
-                            fields.push(lookupField);
-                        }
+                    if (field.lookupFieldRef != undefined) {
+                        fields.push(field.lookupFieldRef);
                     }
                 }
             });
@@ -254,12 +248,7 @@ export default class CustomDataTable extends LightningElement {
         //lookup
         else if (payload.cellType != undefined && payload.cellType == 'lookup') {
             console.log('lookup');
-            var lookupField = payload.cellName;
-            if (lookupField.includes('__c')) {
-                lookupField = lookupField.replace('__c', '__r');
-            } else if (lookupField.endsWith('Id')) {
-                lookupField = lookupField.substring(0,lookupField.length - 2);
-            } 
+            var lookupField = payload.fieldReference;
             var lookupRow = null;
             if(payload.cellValue != undefined){
                 lookupRow = {};

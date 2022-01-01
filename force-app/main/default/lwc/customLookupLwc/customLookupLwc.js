@@ -12,6 +12,8 @@ export default class CustomLookupLwc extends LightningElement {
     @api sObjectApiName = 'Account';
     @api defaultRecordId = '';
     @api nameField;
+    @api relatedTo;
+    @api queuesObjectName;
 
 
     get isLabelAvailable() {
@@ -20,6 +22,21 @@ export default class CustomLookupLwc extends LightningElement {
         }
         return true;
     }
+
+    get isMultipleObjectLookup() {
+        if (this.relatedTo != undefined && this.relatedTo.length > 1) {
+            return true;
+        }
+        return false;
+    }
+
+    get includeQueueOfthisObject() {
+        if (this.isMultipleObjectLookup) {
+            return this.queuesObjectName;
+        }
+        return null;
+    }
+
 
 
     // private properties 
@@ -30,8 +47,7 @@ export default class CustomLookupLwc extends LightningElement {
     delayTimeout;
     selectedRecord = {}; // to store selected lookup record in object formate 
     // initial function to populate default selected lookup record if defaultRecordId provided  
-    connectedCallback() {
-
+    connectedCallback() { 
         if (this.nameField == undefined) {
             getNameField({ 'objectAPIName': this.sObjectApiName })
                 .then((result) => {
@@ -52,7 +68,7 @@ export default class CustomLookupLwc extends LightningElement {
     }
 
     fetchRecord() {
-        fetchDefaultRecord({ recordId: this.defaultRecordId, 'sObjectApiName': this.sObjectApiName, nameField: this.nameField })
+        fetchDefaultRecord({ recordId: this.defaultRecordId })
             .then((result) => {
                 if (result != null) {
                     this.selectedRecord = result;
@@ -67,12 +83,12 @@ export default class CustomLookupLwc extends LightningElement {
 
     get pillLabel() {
         if (this.selectedRecord != undefined && this.selectedRecord.Id != undefined && this.nameField != undefined) {
-            return this.selectedRecord[this.nameField];
+            return this.selectedRecord.Name;
         }
         return null;
     }
     // wire function property to fetch search record based on user input
-    @wire(fetchLookupData, { searchKey: '$searchKey', sObjectApiName: '$sObjectApiName', nameField: '$nameField' })
+    @wire(fetchLookupData, { searchKey: '$searchKey', sObjectApiName: '$sObjectApiName', nameField: '$nameField', includeQueueOfthisObject: '$includeQueueOfthisObject' })
     searchResult(value) {
         const { data, error } = value; // destructure the provisioned value
         this.isSearchLoading = false;
