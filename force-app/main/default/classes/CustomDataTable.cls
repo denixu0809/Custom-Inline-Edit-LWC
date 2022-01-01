@@ -36,6 +36,7 @@ public class CustomDataTable {
                     Schema.SObjectField sfield = fieldMap.get(field);
                     schema.describefieldresult dfield = sfield.getDescribe();
                     fieldWrap fieldWrapRec = new fieldWrap();
+                    fieldWrapRec.objectName = objectAPIName;
                     fieldWrapRec.fieldName = dfield.getname();
                     if(fieldList.contains(fieldWrapRec.fieldName)){
                         fieldWrapRec.isHidden = true;
@@ -45,12 +46,28 @@ public class CustomDataTable {
                     if(fieldWrapRec.fieldType == 'CURRENCY'){
                         fieldWrapRec.currencyCode = currencyCode;
                     }else if(fieldWrapRec.fieldType == 'REFERENCE'){
+                        fieldWrapRec.relatedTo = new List<RelatedTo>();
+                        String fieldReference;
+                        if(fieldWrapRec.fieldName.endsWith('Id')){
+                            fieldReference = fieldWrapRec.fieldName.substring(0,fieldWrapRec.fieldName.length() - 2);
+                        }else if(fieldWrapRec.fieldName.contains('__c')){
+                            fieldReference = fieldWrapRec.fieldName.replace('__c','__r');
+                        }
+                        fieldWrapRec.fieldReference = fieldReference;
                         for(Schema.SObjectType reference : dfield.getReferenceTo()) {
+                            RelatedTo  relatedToRec = new RelatedTo();
                             fieldWrapRec.lookupObjectName = reference.getDescribe().getName();
-                            Map <String, Schema.SObjectField> lookupObjectFieldMap = schemaMap.get(fieldWrapRec.lookupObjectName).getDescribe().fields.getMap();
+                            fieldWrapRec.lookupObjectLabel  = reference.getDescribe().getLabel();
+                            relatedToRec.lookupObjectName = reference.getDescribe().getName();
+                            relatedToRec.lookupObjectLabel  = reference.getDescribe().getLabel();
+                            Map <String, Schema.SObjectField> lookupObjectFieldMap = schemaMap.get(relatedToRec.lookupObjectName).getDescribe().fields.getMap();
     						for(String lookupObjectField :lookupObjectFieldMap.keyset()){
                                 if(lookupObjectFieldMap.get(lookupObjectField).getDescribe().isNameField()){
                                     fieldWrapRec.lookupNameField = lookupObjectFieldMap.get(lookupObjectField).getDescribe().getName();
+                                    fieldWrapRec.lookupFieldRef = fieldWrapRec.fieldReference +'.'+fieldWrapRec.lookupNameField;
+                                    relatedToRec.lookupNameField = lookupObjectFieldMap.get(lookupObjectField).getDescribe().getName();
+                                    relatedToRec.lookupFieldRef = fieldWrapRec.fieldReference +'.'+relatedToRec.lookupNameField;
+                                    fieldWrapRec.RelatedTo.add(relatedToRec);
                                     break;
                                 }
                             }
@@ -77,6 +94,7 @@ public class CustomDataTable {
         }else{
             //incorrect object api name
         }
+        System.debug('fieldWrapMap :: '+JSON.serialize(fieldWrapMap));
         return fieldWrapMap.values();
     } 
     
@@ -158,16 +176,28 @@ public class CustomDataTable {
     
     public class fieldWrap{
         @AuraEnabled public Boolean isHidden = false;
+        @AuraEnabled public String objectName;
         @AuraEnabled public String fieldName;
         @AuraEnabled public String fieldType;
         @AuraEnabled public String fieldLabel;
         @AuraEnabled public String currencyCode;
         @AuraEnabled public Boolean isReadOnly;
         @AuraEnabled public Boolean isSortable;
+        @AuraEnabled public String fieldReference;
+        @AuraEnabled public String lookupObjectLabel;
         @AuraEnabled public String lookupNameField;
         @AuraEnabled public String lookupObjectName;
+        @AuraEnabled public String lookupFieldRef;
+        @AuraEnabled public List<RelatedTo> relatedTo;
         @AuraEnabled public List<OptionWrap> options;
         @AuraEnabled public ControllerFieldWrap controllerField;
+    }
+    
+    public class RelatedTo{
+        @AuraEnabled public String lookupObjectLabel;
+        @AuraEnabled public String lookupNameField;
+        @AuraEnabled public String lookupObjectName;
+        @AuraEnabled public String lookupFieldRef;
     }
     
     public class OptionWrap{

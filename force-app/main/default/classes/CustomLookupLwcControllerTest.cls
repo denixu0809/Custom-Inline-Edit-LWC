@@ -9,7 +9,8 @@ public class CustomLookupLwcControllerTest {
         String recordId = accountRec.Id;
         String searchKey = accountRec.Name;
         String nameField = CustomLookupLwcController.getNameField(sObjectApiName);
-        CustomLookupLwcController.fetchDefaultRecord(recordId, sObjectApiName,nameField);
-        CustomLookupLwcController.fetchLookupData(searchKey, sObjectApiName,nameField);
+        String includeQueueOfthisObject = 'Case';
+        CustomLookupLwcController.fetchDefaultRecord(recordId);
+        CustomLookupLwcController.fetchLookupData(searchKey, sObjectApiName,nameField,includeQueueOfthisObject);
     }
 }

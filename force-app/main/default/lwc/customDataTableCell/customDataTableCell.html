@@ -25,7 +25,7 @@
 			</c-custom-data-table-cell_currency>
 		</template>
 		<template if:true={isLookup}>
-			<c-custom-data-table-cell_lookup index={index} cell-value={cellValue} cell-value-label={cellValueLabel} cell-name={cellName}
+			<c-custom-data-table-cell_lookup index={index} row-meta-data={rowMetaData} cell-value={cellValue} cell-value-label={cellValueLabel} cell-name={cellName}
 				object-name={objectName} is-read-only={isReadOnly} lookup-cell-name={cellValueName} ondatachange={handleCellChange}>
 			</c-custom-data-table-cell_lookup>
 		</template>

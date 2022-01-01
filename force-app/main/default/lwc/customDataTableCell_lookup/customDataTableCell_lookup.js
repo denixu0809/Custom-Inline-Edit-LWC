@@ -1,7 +1,7 @@
 import { LightningElement, api ,track} from 'lwc';
 
 export default class CustomDataTableCell_lookup extends LightningElement {
-
+    @api rowMetaData;
     @api cellValue;
     @api cellName;
     @api cellValueLabel;
@@ -13,6 +13,24 @@ export default class CustomDataTableCell_lookup extends LightningElement {
     @track isEditMode = false;
     @track isTextChange = false;
 
+    get queuesObjectName(){
+        if(this.rowMetaData != undefined){
+            return this.rowMetaData.objectName;
+        }
+        return null;
+    } 
+
+    get iconName(){
+        if(this.rowMetaData != undefined && this.rowMetaData.lookupObjectName != undefined && !this.rowMetaData.lookupObjectName.includes('__c')){
+            return ('standard:'+ this.rowMetaData.lookupObjectName).toLocaleLowerCase();
+        }
+        return null;
+    }
+
+    get relatedTo(){
+        return this.rowMetaData.relatedTo;
+    }
+
     get recordLink(){
         return '/'+this.cellValue;
     }
@@ -22,6 +40,10 @@ export default class CustomDataTableCell_lookup extends LightningElement {
             return '--hover-cursor: pointer'
         }
         return '--hover-cursor: auto'
+    }
+
+    get fieldReference(){
+        return this.rowMetaData.fieldReference;
     }
 
     redirectToRecord(){
@@ -46,10 +68,10 @@ export default class CustomDataTableCell_lookup extends LightningElement {
 
         if(payload != undefined){
             selectedId = payload.Id;
-            cellValueLabel = payload[this.lookupCellName];
+            cellValueLabel = payload.Name;
         }
 
-        var eventPayload = {'cellType':'lookup', 'index' :this.index,'cellName':this.cellName,'cellValue': selectedId,'cellValueLabel': cellValueLabel, 'lookupCellName': this.lookupCellName,objectAPIName : this.objectName};
+        var eventPayload = {'cellType':'lookup', 'index' :this.index,'cellName':this.cellName,'cellValue': selectedId,'cellValueLabel': cellValueLabel, 'lookupCellName': this.lookupCellName,objectAPIName : this.objectName,'fieldReference' : this.fieldReference};
         const selectedEvent = new CustomEvent("datachange", {
             detail: JSON.stringify(eventPayload)
           });
