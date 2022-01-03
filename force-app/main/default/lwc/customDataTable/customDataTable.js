@@ -10,6 +10,7 @@ export default class CustomDataTable extends LightningElement {
     @api title;
     @api objectApiName;
     @api fields;
+    @api filters;
     @api sortableFields;
     @api readOnlyFields;
 
@@ -161,7 +162,7 @@ export default class CustomDataTable extends LightningElement {
         return fields;
     }
 
-    @wire(getRecords, { objectAPIName: '$objectApiName', fields: '$queryFieldList', orderBy : '$orderBy' , orderDirection : '$orderDirection', noOfRefresh : '$noOfRefresh'})
+    @wire(getRecords, { objectAPIName: '$objectApiName', fields: '$queryFieldList', orderBy : '$orderBy' , orderDirection : '$orderDirection', filters : '$filters', noOfRefresh : '$noOfRefresh'})
     wiredData ({ error, data }) {
         if (data) {
             this.dataBulk = JSON.parse(JSON.stringify(data));
