@@ -13,8 +13,9 @@ public class CustomDataTableTest {
         String orderBy = 'Name';
         String orderDirection = 'ASC';
         String noOfRefresh = '1';
+        String filters = 'Name!=null,CreatedDate=Today';
         CustomDataTable.getObjectMetaData(objectAPIName, fields);
-        List<sObject> records = CustomDataTable.getRecords(objectAPIName, fields, orderBy, orderDirection, noOfRefresh);
+        List<sObject> records = CustomDataTable.getRecords(objectAPIName, fields, orderBy, orderDirection,filters, noOfRefresh);
         CustomDataTable.saveRecords(records);
     }
 }
