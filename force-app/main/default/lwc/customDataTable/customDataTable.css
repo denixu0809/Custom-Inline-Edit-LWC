@@ -15,3 +15,7 @@
 .page-section{
 	display: flex;
 }
+
+.record-container{
+	min-height: 350px;
+}
