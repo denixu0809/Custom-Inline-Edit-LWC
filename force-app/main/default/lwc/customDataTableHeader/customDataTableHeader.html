@@ -1,6 +1,7 @@
 <template>
-	<th class="" scope="col" onclick={sortColumHandler}>
-		<div class="slds-truncate" title="">{header.fieldLabel}
+	<th class="" scope="col">
+		<div title="">
+			<span  onclick={sortColumHandler}>{header.fieldLabel}
 			<template if:true={header.isSortable}>
 				<template if:true={sortByThisHeader}>
 					<lightning-button-icon class=" slds-m-around_xx-small" icon-name={iconName} variant="bare"
@@ -9,10 +10,68 @@
 				<template if:false={sortByThisHeader}>
 					<lightning-button-icon class=" slds-m-left_xx-small" icon-name='utility:up' variant="bare"
 						size="small"></lightning-button-icon>
-					<lightning-button-icon icon-name='utility:down' variant="bare"
-						size="small"></lightning-button-icon>
+					<lightning-button-icon icon-name='utility:down' variant="bare" size="small"></lightning-button-icon>
+				</template>
+			</template>
+			</span>
+			<template if:true={header.isFilterable}>
+				<template if:false={isFilterEnabled}>
+					<lightning-button-icon icon-name='utility:filterList' variant="bare" size="small"
+						class=" slds-m-left_xx-small" onclick={filterEnableHandler}></lightning-button-icon>
+				</template>
+				<template if:true={isFilterEnabled}>
+					<div class="search_section" title="">
+						<div class="slds-grid">
+							<div class="slds-col">
+								<template if:true={isTextSearch}>
+									<lightning-input type="search" variant="label-hidden" onchange={handleSearch}>
+									</lightning-input>
+								</template>
+								<template if:true={isNumberSearch}>
+									<lightning-combobox variant="label-hidden" value={operator}
+										options={getOperatorOption} onchange={handleOperatorChange}>
+									</lightning-combobox>
+									<lightning-input type="Number" variant="label-hidden" onchange={handleSearch}>
+									</lightning-input>
+								</template>
+								<template if:true={isCheckBox}>
+									<lightning-combobox variant="label-hidden" 
+										options={CheckboxOption} onchange={handleCheckboxChange}>
+									</lightning-combobox>
+								</template>
+								<template if:true={isDateORDateTime}>
+									<template if:true={isRelativeDate}>
+										<lightning-combobox variant="label-hidden" value={selectedRelativeDate}
+											options={relativeDateOption} onchange={handleRelativeDateChange}>
+										</lightning-combobox>
+
+										<a class="slds-float_right" onclick={onRelativeDateHandler}>custom</a>
+									</template>
+									<template if:false={isRelativeDate}>
+										<lightning-input type={fieldType} variant="label-hidden" name="startDate"
+											onchange={handleDateChange}></lightning-input>
+										<template if:true={isDateRange}>
+											<lightning-input type={fieldType} variant="label-hidden" name="endDate"
+												onchange={handleDateChange}>
+											</lightning-input>
+											<a class="slds-float_right" onclick={onDateRangeHandler}>static date</a>
+										</template>
+										<template if:false={isDateRange}>
+											<a class="slds-float_right" onclick={onDateRangeHandler}>range date</a>
+										</template>
+										<a class="slds-float_right slds-m-right_x-small" onclick={onRelativeDateHandler}> relative date</a>
+									</template>
+								</template>
+							</div>
+							<div class="slds-col slds-p-around_xx-small">
+								<lightning-button-icon icon-name='utility:close' variant="bare"
+									onclick={removeFilterHanlder}></lightning-button-icon>
+							</div>
+						</div>
+					</div>
 				</template>
 			</template>
 		</div>
+
 	</th>
 </template>
