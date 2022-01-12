@@ -16,6 +16,7 @@
             <property name="filters" type="String" label="Filters (comma seperated)"/>
             <property name="readOnlyFields" type="String" label="Read Only Fields"/>
             <property name="sortableFields" type="String" label="Sortable Fields"/>
+            <property name="filterableFields" type="String" label="Filterable Fields"/>
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>

@@ -1,3 +1,7 @@
 :host{
     display:contents;
 }
+.search_section{
+    font-weight: normal;
+    min-width: 200px;
+}

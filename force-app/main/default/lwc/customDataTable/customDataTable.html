@@ -53,7 +53,7 @@
 						<template for:each={fieldsMetaData} for:item="header">
 							<template if:false={header.isHidden}>
 								<c-custom-data-table-Header key={header.fieldName} order-by={orderBy}
-									onsortcolumn={handleSortColumn} order-direction={orderDirection} header={header}>
+									onsortcolumn={handleSortColumn} order-direction={orderDirection} header={header} onsearch={handleOnSearch}>
 								</c-custom-data-table-Header>
 							</template>
 						</template>
