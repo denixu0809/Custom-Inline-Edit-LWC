@@ -195,7 +195,15 @@ export default class CustomDataTableHeader extends LightningElement {
                 fieldQuery = (fieldName + '  ' + operator + ' ' + fieldValue + ' ');
 
             } else if(this.isTextSearch){
-                fieldQuery = (fieldName + ' Like \'%' + fieldValue + '%\'');
+                var fieldQueryList = [];
+                fieldValue.split(';').forEach(currentItem => {
+                    if (currentItem != undefined && currentItem.trim() != '') {
+                        fieldQueryList.push(fieldName + ' Like \'%' + currentItem.trim() + '%\'');
+                    }
+                });
+                if(fieldQueryList.length>0){
+                    fieldQuery = '('+ fieldQueryList.join(' OR ')+')';
+                }
             }else if(this.isCheckBox){
                 fieldQuery = fieldName +' = '+ fieldValue;
             }
