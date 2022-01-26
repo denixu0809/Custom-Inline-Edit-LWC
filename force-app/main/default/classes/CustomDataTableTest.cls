@@ -10,13 +10,12 @@ public class CustomDataTableTest {
                 fields.add(field.toLowerCase());
             }
         }
-        String orderBy = 'Name';
-        String orderDirection = 'ASC';
+        String sorting = 'Name ASC';
         String noOfRefresh = '1';
         String filters = 'Name!=null,CreatedDate=Today';
         String additionalFilters = 'CreatedDate!=null';
         CustomDataTable.getObjectMetaData(objectAPIName, fields);
-        List<sObject> records = CustomDataTable.getRecords(objectAPIName, fields, orderBy, orderDirection,filters,additionalFilters, noOfRefresh);
+        List<sObject> records = CustomDataTable.getRecords(objectAPIName, fields, sorting,filters,additionalFilters, noOfRefresh);
         CustomDataTable.saveRecords(records);
     }
 }

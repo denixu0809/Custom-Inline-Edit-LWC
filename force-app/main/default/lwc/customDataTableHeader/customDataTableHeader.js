@@ -3,6 +3,8 @@ export default class CustomDataTableHeader extends LightningElement {
     @api header;
     @api orderBy;
     @api orderDirection;
+    @api selectedGroupBy;
+    @api selectedGroupDirection;
 
     @track isFilterEnabled = false;
     operator = '=';
@@ -19,7 +21,7 @@ export default class CustomDataTableHeader extends LightningElement {
     }
 
     get sortByThisHeader() {
-        if (this.orderByFieldName == this.orderBy) {
+        if (this.orderByFieldName == this.selectedGroupBy || this.orderByFieldName == this.orderBy) {
             return true;
         }
         return false;
@@ -105,17 +107,20 @@ export default class CustomDataTableHeader extends LightningElement {
     get orderByFieldName() {
         var orderBy = this.header.fieldName;
         if (this.header.fieldType == 'REFERENCE') {
-            if (orderBy.includes('__c')) {
-                orderBy = orderBy.replace('__c', '__r') + '.' + this.header.lookupNameField;
-            } else if (orderBy.endsWith('Id')) {
-                orderBy = orderBy.substring(0, orderBy.length - 2) + '.' + this.header.lookupNameField;
-            }
+            return this.header.lookupFieldRef;
         }
         return orderBy;
     }
 
     get iconName() {
+        if(this.orderByFieldName == this.selectedGroupBy){
+            return this.selectedGroupDirection == 'asc' ? 'utility:arrowup' : 'utility:arrowdown';
+        }
         return this.orderDirection == 'asc' ? 'utility:arrowup' : 'utility:arrowdown';
+    }
+
+    get cellClass(){
+        return (this.orderByFieldName == this.selectedGroupBy)?'bg-lightgray':'';
     }
 
     onRelativeDateHandler(){

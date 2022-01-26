@@ -8,12 +8,14 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class CustomDataTable extends LightningElement {
     @api title;
-    @api objectApiName;
+    @api objApiName;
+    @api objectAPIName;
     @api fields;
     @api filters;
     @api sortableFields;
     @api readOnlyFields;
     @api filterableFields;
+    @api recordId;
     additioinalFilters = '';
     searchMap = new Map();
 
@@ -29,12 +31,17 @@ export default class CustomDataTable extends LightningElement {
     @track orderDirection = null;
     showRecords = '10';
     @track currentPage = 1;
+    @track selectedGroupBy = '';
+    @track selectedGroupDirection = 'asc';
 
 
 
     connectedCallback() {
         //initial assignment
         this.fieldList = this.getList(this.fields);
+        if(this.filters == undefined){
+            this.filters = null;
+        }
     }
 
     get sortableFieldList() {
@@ -98,8 +105,13 @@ export default class CustomDataTable extends LightningElement {
     }
 
     handleSortColumn(event) {
-        this.orderBy = event.detail;
-        this.orderDirection = this.orderDirection == 'asc' ? 'desc' : 'asc';
+        var fieldName = event.detail;
+        if(fieldName == this.selectedGroupBy){
+            this.selectedGroupDirection = this.selectedGroupDirection == 'asc' ? 'desc' : 'asc';
+        }else{
+            this.orderBy = fieldName;
+            this.orderDirection = this.orderDirection == 'asc' ? 'desc' : 'asc';
+        }
         refreshApex(this.wiredData);
     }
 
@@ -152,7 +164,48 @@ export default class CustomDataTable extends LightningElement {
         this.getPagination();
     }
 
-    @wire(getObjectMetaData, { objectAPIName: '$objectApiName', fields: '$fieldList' })
+    get fieldsMetaDataWrap(){
+        var fieldsMetaData = [];
+        if(this.fieldsMetaData != undefined && this.selectedGroupBy != undefined && this.selectedGroupBy != '' 
+        && this.selectedGroupDirection != undefined && this.selectedGroupDirection != ''){
+            var fieldsMetaDataGroupBy = [];
+            this.fieldsMetaData.forEach(field => {
+                var fieldRef = field.fieldType == 'REFERENCE'?field.lookupFieldRef:field.fieldName;
+               if(fieldRef == this.selectedGroupBy){
+                   fieldsMetaDataGroupBy.push(field);
+               }else{
+                   fieldsMetaData.push(field);
+               }
+            });
+            fieldsMetaData = fieldsMetaDataGroupBy.concat(fieldsMetaData);
+        }else{
+            fieldsMetaData = this.fieldsMetaData;
+        }
+        return fieldsMetaData;
+    }
+
+    get groupByFieldsOptions(){
+        var groupByFieldsOption = [];
+        groupByFieldsOption.push({label : ' -- NONE --',value : ''});
+        if(this.fieldsMetaData != undefined){
+            this.fieldsMetaData.forEach(field => {
+                if(field.isSortable){
+                    var pickValue = field.fieldName;
+                    if(field.fieldType == 'REFERENCE'){
+                        pickValue = field.lookupFieldRef;
+                    }
+                    groupByFieldsOption.push({label : field.fieldLabel, value : pickValue});
+                }
+            });
+        }
+        return groupByFieldsOption;
+    }
+
+    onChangeGroupBy(event){
+        this.selectedGroupBy = event.target.value;
+    }
+
+    @wire(getObjectMetaData, { objectAPIName: '$objApiName', fields: '$fieldList' })
     wiredObjectMetaData({ error, data }) {
         if (data) {
             var fieldsMetaData = [];
@@ -197,7 +250,22 @@ export default class CustomDataTable extends LightningElement {
         return fields;
     }
 
-    @wire(getRecords, { objectAPIName: '$objectApiName', fields: '$queryFieldList', orderBy: '$orderBy', orderDirection: '$orderDirection', filters: '$filters', additioinalFilters: '$additioinalFilters', noOfRefresh: '$noOfRefresh' })
+    get sorting(){
+        var sortingList = [];
+        
+        if(this.selectedGroupBy != undefined && this.selectedGroupBy != '' 
+        && this.selectedGroupDirection != undefined && this.selectedGroupDirection != ''){
+            sortingList.push(this.selectedGroupBy+' '+this.selectedGroupDirection + ' NULLS LAST');
+        }
+
+        if(this.orderBy != undefined && this.orderBy != '' 
+        && this.orderDirection != undefined && this.orderDirection != ''){
+            sortingList.push(this.orderBy+' '+this.orderDirection + ' NULLS LAST');
+        }
+        return sortingList.join(',');
+    }
+
+    @wire(getRecords, { objectAPIName: '$objApiName', fields: '$queryFieldList', 'sorting' : '$sorting', filters: '$filters', additioinalFilters: '$additioinalFilters', noOfRefresh: '$noOfRefresh' })
     wiredData({ error, data }) {
         if (data) {
             this.dataBulk = JSON.parse(JSON.stringify(data));

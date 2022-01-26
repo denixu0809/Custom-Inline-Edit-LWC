@@ -147,7 +147,7 @@ public class CustomDataTable {
     }
     
     @AuraEnabled(Cacheable=true)
-    public static List<sObject> getRecords(String objectAPIName, List<String> fields, String orderBy, String orderDirection,String filters,String additioinalFilters,String noOfRefresh){
+    public static List<sObject> getRecords(String objectAPIName, List<String> fields, String sorting,String filters,String additioinalFilters,String noOfRefresh){
         String query = 'Select ';
         if(!fields.contains('Id')){
             if(fields == null){
@@ -166,19 +166,23 @@ public class CustomDataTable {
         List<String> filterList = new List<String>();
         if(filters != null){
             for(String filter : filters.split(',')){
-                filterList.add(filter.trim());
+                if(filter != ''){
+                    filterList.add(filter.trim());
+                }
             }
         }
         if(additioinalFilters != null && additioinalFilters != ''){
             for(String filter : additioinalFilters.split(',')){
-                filterList.add(filter.trim());
+                if(filter != ''){
+                    filterList.add(filter.trim());
+                }
             }
         }
         if(filterList.size()>0){
             query += ' Where '+ String.join(filterList, ' and ');
         }
-        if(orderBy != null && orderDirection != null){
-            query += ' Order By '+orderBy+' '+orderDirection+ ' NULLS LAST';
+        if(sorting != null && sorting != ''){
+            query += ' Order By '+ sorting;
         }
         System.debug('query :: '+query);
         return Database.query(query);

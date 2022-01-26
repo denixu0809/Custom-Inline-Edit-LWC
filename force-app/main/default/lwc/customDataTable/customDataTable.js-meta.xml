@@ -11,7 +11,7 @@
 	<targetConfigs>
         <targetConfig targets="lightning__RecordPage,lightning__AppPage,lightning__HomePage,lightning__FlowScreen">
             <property name="title" type="String" label="Title"/>
-            <property name="objectApiName" type="String" label="Object API Name"/>
+            <property name="objApiName" type="String" label="Object API Name"/>
             <property name="fields" type="String" label="Fields"/>
             <property name="filters" type="String" label="Filters (comma seperated)"/>
             <property name="readOnlyFields" type="String" label="Read Only Fields"/>
