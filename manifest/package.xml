@@ -3,7 +3,7 @@
 	<types>
 		<members>CustomDataTable</members>
 		<members>CustomDataTableTest</members>
-		<members>CustomLookupLwcController</members>
+		<members>CustomLookupLwcController</members>objectApiName
 		<members>CustomLookupLwcControllerTest</members>
 		<name>ApexClass</name>
 	</types>

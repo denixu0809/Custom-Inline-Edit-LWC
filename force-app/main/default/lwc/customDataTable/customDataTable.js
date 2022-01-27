@@ -8,8 +8,7 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class CustomDataTable extends LightningElement {
     @api title;
-    @api objApiName;
-    @api objectAPIName;
+    @api objectApiName;
     @api fields;
     @api filters;
     @api sortableFields;
@@ -205,7 +204,7 @@ export default class CustomDataTable extends LightningElement {
         this.selectedGroupBy = event.target.value;
     }
 
-    @wire(getObjectMetaData, { objectAPIName: '$objApiName', fields: '$fieldList' })
+    @wire(getObjectMetaData, { objectAPIName: '$objectApiName', fields: '$fieldList' })
     wiredObjectMetaData({ error, data }) {
         if (data) {
             var fieldsMetaData = [];
@@ -265,7 +264,7 @@ export default class CustomDataTable extends LightningElement {
         return sortingList.join(',');
     }
 
-    @wire(getRecords, { objectAPIName: '$objApiName', fields: '$queryFieldList', 'sorting' : '$sorting', filters: '$filters', additioinalFilters: '$additioinalFilters', noOfRefresh: '$noOfRefresh' })
+    @wire(getRecords, { objectAPIName: '$objectApiName', fields: '$queryFieldList', 'sorting' : '$sorting', filters: '$filters', additioinalFilters: '$additioinalFilters', noOfRefresh: '$noOfRefresh' })
     wiredData({ error, data }) {
         if (data) {
             this.dataBulk = JSON.parse(JSON.stringify(data));
