@@ -89,6 +89,7 @@ public class CustomDataTable {
                     fieldWrapRec.isReadOnly = !dfield.isUpdateable();
                     fieldWrapRec.isSortable = dfield.isSortable();
                     fieldWrapRec.isFilterable = dfield.isFilterable();
+                    fieldWrapRec.isGroupable = dfield.isFilterable();
                     fieldWrapMap.put(fieldWrapRec.fieldName,fieldWrapRec);
                 }
             }
@@ -127,7 +128,7 @@ public class CustomDataTable {
                     Object controllerValue = (controllerValues == null ? (Object) (i == 1) : (Object) (controllerValues[i].isActive() ? controllerValues[i].getLabel() : null));
                     Integer bitIndex = i / 6;
                     Integer bitShift = 5 - Math.mod(i, 6 );
-                    if(controllerValue == null || (base64map.indexOf(base64chars[bitIndex]) & (1 << bitShift)) == 0){
+                    if(controllerValue == null || (base64chars.size()>bitIndex && (base64map.indexOf(base64chars[bitIndex]) & (1 << bitShift)) == 0)){
                         continue;
                     } 
                     if (!dependentPicklistValues.containsKey(String.valueOf(controllerValue))){
@@ -203,6 +204,7 @@ public class CustomDataTable {
         @AuraEnabled public Boolean isReadOnly;
         @AuraEnabled public Boolean isSortable;
         @AuraEnabled public Boolean isFilterable;
+        @AuraEnabled public Boolean isGroupable;
         @AuraEnabled public String fieldReference;
         @AuraEnabled public String lookupObjectLabel;
         @AuraEnabled public String lookupNameField;

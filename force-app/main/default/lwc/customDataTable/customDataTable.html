@@ -24,10 +24,11 @@
 			</div>
 			<div class="slds-col">
 				<div class="page-section slds-float_right  slds-m-around_x-small">
+					<template if:true={isGroupByAvailable}>
 					<span class="slds-m-around_xx-small">Group By:</span>
 					<lightning-combobox class="slds-p-right_x-small" variant="label-hidden" value={selectedGroupBy} options={groupByFieldsOptions}
 						onchange={onChangeGroupBy}>
-					</lightning-combobox>
+					</lightning-combobox></template>
 					<span><lightning-button-icon
                 class=""
                 icon-name="utility:chevronleft"
