@@ -14,12 +14,14 @@ export default class CustomDataTable extends LightningElement {
     @api sortableFields;
     @api readOnlyFields;
     @api filterableFields;
+    @api groupbyFields;
     @api recordId;
     additioinalFilters = '';
     searchMap = new Map();
 
 
     fieldList = [];
+    groupbyFieldsList = [];
     @track selectedRecordIds = [];
     noOfRefresh = 0;
     @track fieldsMetaData = [];
@@ -38,9 +40,10 @@ export default class CustomDataTable extends LightningElement {
     connectedCallback() {
         //initial assignment
         this.fieldList = this.getList(this.fields);
-        if(this.filters == undefined){
+        if (this.filters == undefined) {
             this.filters = null;
         }
+        this.groupbyFieldsList = this.getList(this.groupbyFields);
     }
 
     get sortableFieldList() {
@@ -49,7 +52,7 @@ export default class CustomDataTable extends LightningElement {
 
     get readOnlyFieldList() {
         return this.getList(this.readOnlyFields);
-    }
+    } 
 
     getList(payload) {
         var list = [];
@@ -105,9 +108,9 @@ export default class CustomDataTable extends LightningElement {
 
     handleSortColumn(event) {
         var fieldName = event.detail;
-        if(fieldName == this.selectedGroupBy){
+        if (fieldName == this.selectedGroupBy) {
             this.selectedGroupDirection = this.selectedGroupDirection == 'asc' ? 'desc' : 'asc';
-        }else{
+        } else {
             this.orderBy = fieldName;
             this.orderDirection = this.orderDirection == 'asc' ? 'desc' : 'asc';
         }
@@ -119,8 +122,8 @@ export default class CustomDataTable extends LightningElement {
         var fieldName = payload.fieldName;
         var fieldQuery = payload.fieldQuery;
 
-        if (fieldQuery != null && fieldQuery != undefined  && fieldQuery != '') { 
-                this.searchMap.set(fieldName, fieldQuery); 
+        if (fieldQuery != null && fieldQuery != undefined && fieldQuery != '') {
+            this.searchMap.set(fieldName, fieldQuery);
         } else {
             if (this.searchMap.has(fieldName)) {
                 this.searchMap.delete(fieldName);
@@ -163,44 +166,52 @@ export default class CustomDataTable extends LightningElement {
         this.getPagination();
     }
 
-    get fieldsMetaDataWrap(){
+    get fieldsMetaDataWrap() {
         var fieldsMetaData = [];
-        if(this.fieldsMetaData != undefined && this.selectedGroupBy != undefined && this.selectedGroupBy != '' 
-        && this.selectedGroupDirection != undefined && this.selectedGroupDirection != ''){
+        if (this.fieldsMetaData != undefined && this.selectedGroupBy != undefined && this.selectedGroupBy != ''
+            && this.selectedGroupDirection != undefined && this.selectedGroupDirection != '') {
             var fieldsMetaDataGroupBy = [];
             this.fieldsMetaData.forEach(field => {
-                var fieldRef = field.fieldType == 'REFERENCE'?field.lookupFieldRef:field.fieldName;
-               if(fieldRef == this.selectedGroupBy){
-                   fieldsMetaDataGroupBy.push(field);
-               }else{
-                   fieldsMetaData.push(field);
-               }
+                var fieldRef = field.fieldType == 'REFERENCE' ? field.lookupFieldRef : field.fieldName;
+                if (fieldRef == this.selectedGroupBy) {
+                    fieldsMetaDataGroupBy.push(field);
+                } else {
+                    fieldsMetaData.push(field);
+                }
             });
             fieldsMetaData = fieldsMetaDataGroupBy.concat(fieldsMetaData);
-        }else{
+        } else {
             fieldsMetaData = this.fieldsMetaData;
         }
         return fieldsMetaData;
     }
 
-    get groupByFieldsOptions(){
+    get groupByFieldsOptions() {
         var groupByFieldsOption = [];
-        groupByFieldsOption.push({label : ' -- NONE --',value : ''});
-        if(this.fieldsMetaData != undefined){
+        var defaultGroupByOption = [];
+        var groupByFields = this.groupbyFieldsList;
+        if (groupByFields.length > 0 && this.fieldsMetaData != undefined) {
             this.fieldsMetaData.forEach(field => {
-                if(field.isSortable){
-                    var pickValue = field.fieldName;
-                    if(field.fieldType == 'REFERENCE'){
-                        pickValue = field.lookupFieldRef;
+                if (groupByFields.includes(field.fieldName)) {
+                    if (field.isGroupable) {
+                        var pickValue = field.fieldName;
+                        if (field.fieldType == 'REFERENCE') {
+                            pickValue = field.lookupFieldRef;
+                        }
+                        groupByFieldsOption.push({ label: field.fieldLabel, value: pickValue });
                     }
-                    groupByFieldsOption.push({label : field.fieldLabel, value : pickValue});
                 }
             });
         }
-        return groupByFieldsOption;
+        if (groupByFieldsOption.length > 0) {
+            defaultGroupByOption.push({ label: ' -- NONE --', value: '' });
+        }
+        return defaultGroupByOption.concat(groupByFieldsOption);
     }
 
-    onChangeGroupBy(event){
+    get isGroupByAvailable(){return this.groupByFieldsOptions.length>0;}
+
+    onChangeGroupBy(event) {
         this.selectedGroupBy = event.target.value;
     }
 
@@ -249,22 +260,22 @@ export default class CustomDataTable extends LightningElement {
         return fields;
     }
 
-    get sorting(){
+    get sorting() {
         var sortingList = [];
-        
-        if(this.selectedGroupBy != undefined && this.selectedGroupBy != '' 
-        && this.selectedGroupDirection != undefined && this.selectedGroupDirection != ''){
-            sortingList.push(this.selectedGroupBy+' '+this.selectedGroupDirection + ' NULLS LAST');
+
+        if (this.selectedGroupBy != undefined && this.selectedGroupBy != ''
+            && this.selectedGroupDirection != undefined && this.selectedGroupDirection != '') {
+            sortingList.push(this.selectedGroupBy + ' ' + this.selectedGroupDirection + ' NULLS LAST');
         }
 
-        if(this.orderBy != undefined && this.orderBy != '' 
-        && this.orderDirection != undefined && this.orderDirection != ''){
-            sortingList.push(this.orderBy+' '+this.orderDirection + ' NULLS LAST');
+        if (this.orderBy != undefined && this.orderBy != ''
+            && this.orderDirection != undefined && this.orderDirection != '') {
+            sortingList.push(this.orderBy + ' ' + this.orderDirection + ' NULLS LAST');
         }
         return sortingList.join(',');
     }
 
-    @wire(getRecords, { objectAPIName: '$objectApiName', fields: '$queryFieldList', 'sorting' : '$sorting', filters: '$filters', additioinalFilters: '$additioinalFilters', noOfRefresh: '$noOfRefresh' })
+    @wire(getRecords, { objectAPIName: '$objectApiName', fields: '$queryFieldList', 'sorting': '$sorting', filters: '$filters', additioinalFilters: '$additioinalFilters', noOfRefresh: '$noOfRefresh' })
     wiredData({ error, data }) {
         if (data) {
             this.dataBulk = JSON.parse(JSON.stringify(data));

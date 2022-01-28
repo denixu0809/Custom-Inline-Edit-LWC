@@ -17,6 +17,7 @@
             <property name="readOnlyFields" type="String" label="Read Only Fields"/>
             <property name="sortableFields" type="String" label="Sortable Fields"/>
             <property name="filterableFields" type="String" label="Filterable Fields"/>
+            <property name="groupbyFields" type="String" label="Group By Fields"/>
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>
